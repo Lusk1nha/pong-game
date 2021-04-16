@@ -11,7 +11,7 @@ const game = {
   // Game infos
   width: 1000,
   height: 540,
-  gravity: 0.25,
+  gravity: 0.01,
   friction: 0.98
 
 }
@@ -21,17 +21,17 @@ canvas.height = game.height
 
 const player = {
   // Player infos
-  width: 7, height: 65, 
-  x: 45, y: canvas.height / 2 - 32.5,
+  width: 7, height: 66, 
+  x: 45, y: canvas.height / 2 - 33,
   speed: 12
 
 }
 
 const CPU = {
   // CPU infos
-  width: 7, height: 65, 
-  x: canvas.width - 45, y: canvas.height / 2 - 32.5,
-  speed: 5
+  width: 7, height: 66, 
+  x: canvas.width - 45, y: canvas.height / 2 - 33,
+  speed: 0.2
 
 }
 
@@ -43,7 +43,7 @@ const ball = {
   x: canvas.width / 2,
   y: canvas.height / 2,
   velX: -5,
-  velY: 2,
+  velY: 0,
 
 }
 
@@ -71,7 +71,6 @@ const defaultGame = () => {
   ctx.arc(canvas.width / 2, canvas.height / 2, ball.radius, 0, Math.PI * 2)
   ctx.fill()
 
-
   player.x = 45
   player.y = canvas.height / 2 - 32.5
 
@@ -81,7 +80,7 @@ const defaultGame = () => {
   ball.x = canvas.width / 2
   ball.y = canvas.height / 2
   ball.velX = -5
-  ball.velY = 5
+  ball.velY = 2
 
   playerScore.innerHTML = 0
   cpuScore.innerHTML = 0
@@ -102,8 +101,6 @@ const renderPlayer = () => {
   ctx.shadowBlur = 7
   ctx.fillStyle = 'white'
   ctx.fillRect(player.x, player.y, player.width, player.height)
-
-  
 
 }
 
@@ -147,8 +144,11 @@ const renderCPU = () => {
 
 const moveCPU = () => {
   // MOVE the CPU following the ball position
-  if ( CPU.y > ball.y ) CPU.y -= CPU.speed
-  else CPU.y += CPU.speed
+  setInterval(() => {
+    if ( CPU.y > ball.y ) CPU.y -= CPU.speed + 0.7
+    else CPU.y += CPU.speed
+
+  }, 80)
 
   // This statement blocks the CPU from passing beyond the edges of the canvas 
   if ( CPU.y < 0 ) {
@@ -158,7 +158,6 @@ const moveCPU = () => {
 
     return CPU.y = canvas.height - CPU.height
   }
-
 }
 
 
@@ -209,7 +208,6 @@ const ballCollision = () => {
       ball.velY = 2
     }, 2000)
 
-
     cpuScore.innerHTML = parseInt(cpuScore.innerHTML) + 1
 
   // RIGHT - Collisition
@@ -228,18 +226,42 @@ const ballCollision = () => {
     playerScore.innerHTML = parseInt(playerScore.innerHTML) + 1
 
   // Player
-  } else if ( ball.x - 10 === player.x && ball.y >= player.y - player.height / 2 && ball.y <= player.y + player.height ) {
-    if ( ball.velX < 0 ) {
-      ball.velX = 10
-      ball.velY = 5
+  } else if ( ball.x - 10 === player.x && (ball.y >= player.y - 5) && ball.y <= player.y + player.height ) {
+    const initialPlayer = player.y
+    const halfPlayer = (player.height / 100) * 40
+    const centerPlayer = (player.height / 100) * 20
+    
+    ball.velX = 10
+    if ( ball.y >= initialPlayer - 5 && ball.y < initialPlayer + halfPlayer) {
+      ball.velY = -5 + game.gravity
+      
+    } else if ( ball.y >= initialPlayer + halfPlayer && ball.y < initialPlayer + halfPlayer + centerPlayer) {
+      ball.velY = 1 + game.gravity
+      ball.velX = 15
+
+    } else {
+      ball.velY = 5 + game.gravity
 
     }
 
-    console.log(ball.velX)
-
   // CPU
-  } else if ( ball.x === CPU.x  && ball.y >= CPU.y - CPU.height / 2 && ball.y <= CPU.y + CPU.height ) {
-    ball.velX = -ball.velX
+  } else if ( ball.x === CPU.x  && ball.y >= (CPU.y - 5) && ball.y <= CPU.y + CPU.height ) {
+    const initialCPU = CPU.y
+    const halfCPU = (CPU.height / 100) * 40
+    const centerCPU = (CPU.height / 100) * 20
+    
+    ball.velX = -10
+    if ( ball.y >= initialCPU - 5 && ball.y < initialCPU + halfCPU) {
+      ball.velY = -4 + game.gravity
+
+    } else if ( ball.y >= initialCPU + halfCPU && ball.y < initialCPU + halfCPU + centerCPU) {
+      ball.velY = 1 + game.gravity
+      ball.velX = -15
+
+    } else {
+      ball.velY = 4 + game.gravity
+
+    }
 
   }
 }
