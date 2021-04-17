@@ -7,7 +7,7 @@ const winContainer = document.querySelector('.whoWins')
 const playerScore = document.querySelector('.user-score')
 const cpuScore = document.querySelector('.cpu-score')
 
-const keyState = {}
+let keyState = {}
 
 const game = {
   // Game infos
@@ -25,7 +25,7 @@ const player = {
   // Player infos
   width: 7, height: 66, 
   x: 45, y: canvas.height / 2 - 33,
-  speed: 4
+  speed: 144 / 25
 
 }
 
@@ -33,7 +33,7 @@ const CPU = {
   // CPU infos
   width: 7, height: 66, 
   x: canvas.width - 45, y: canvas.height / 2 - 33,
-  speed: 0.2
+  speed: 0.14
 
 }
 
@@ -88,6 +88,8 @@ const defaultGame = () => {
   cpuScore.innerHTML = 0
 
   setTimeout(() => {
+    keyState = {}
+
     window.addEventListener('keydown', function(e) {
       keyState[e.keyCode || e.which] = true 
     }, true)
@@ -97,9 +99,8 @@ const defaultGame = () => {
     
     }, true)
 
-    updateGame()
+    // updateGame()
   }, 2000)
-
 }
 
 const renderPlayer = () => {
@@ -114,13 +115,21 @@ const renderPlayer = () => {
 }
 
 const movePlayer = () => {
-  if ( keyState[38] || keyState[66] ) {
+  // ARROW UP
+  if ( keyState[38] || keyState[87]) {
     player.y -= player.speed
 
   }
 
-  if ( keyState[40] || keyState[69] ) {
+  // ARROW DOWN
+  if ( keyState[40] || keyState[83] ) {
     player.y += player.speed
+
+  }
+
+  // ESC
+  if ( keyState[27] ) {
+    defaultGame()
 
   }
 
