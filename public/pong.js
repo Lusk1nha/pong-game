@@ -286,7 +286,7 @@ const Win = () => {
   return false
 }
 
-const fps = 90
+const fps = 144
 const updateGame = () => {
   // This give to the game the all infos as Player, ball, and CPU position.
   renderPlayer()
