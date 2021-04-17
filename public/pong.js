@@ -284,6 +284,7 @@ const Win = () => {
   return false
 }
 
+const fps = 60
 const updateGame = () => {
   // This give to the game the all infos as Player, ball, and CPU position.
   renderPlayer()
@@ -292,7 +293,9 @@ const updateGame = () => {
 
   if (Win()) return
  
-  start = requestAnimationFrame(updateGame)
+  setTimeout(() => {
+    start = requestAnimationFrame(updateGame)
+  }, 1000 / fps)
 }
 
 // When the page completely loads to the user, the game it's begin
