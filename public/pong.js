@@ -7,6 +7,8 @@ const winContainer = document.querySelector('.whoWins')
 const playerScore = document.querySelector('.user-score')
 const cpuScore = document.querySelector('.cpu-score')
 
+const keyState = {}
+
 const game = {
   // Game infos
   width: 1000,
@@ -23,7 +25,7 @@ const player = {
   // Player infos
   width: 7, height: 66, 
   x: 45, y: canvas.height / 2 - 33,
-  speed: 12
+  speed: 4
 
 }
 
@@ -86,12 +88,19 @@ const defaultGame = () => {
   cpuScore.innerHTML = 0
 
   setTimeout(() => {
-    window.onkeydown = movePlayer
+    window.addEventListener('keydown', function(e) {
+      keyState[e.keyCode || e.which] = true 
+    }, true)
+    
+    window.addEventListener('keyup', function(e) {
+      keyState[e.keyCode || e.which] = false
+    
+    }, true)
+
     updateGame()
   }, 2000)
 
 }
-
 
 const renderPlayer = () => {
   // RENDER PLAYER with actual position
@@ -104,23 +113,17 @@ const renderPlayer = () => {
 
 }
 
-const movePlayer = event => {
-  // GIVE to the PLAYER movement with ARROW UP and ARROW DOWN
-  const userKey = event.key
-  if ( userKey === 'ArrowUp' || userKey === 'w' ) {
+const movePlayer = () => {
+  if ( keyState[38] || keyState[66] ) {
     player.y -= player.speed
 
-  } else if ( userKey === 'ArrowDown' || userKey === 's' ) {
-    player.y += player.speed
-
-  } else if ( userKey === 'Escape') {
-    window.cancelAnimationFrame(start)
-    window.onkeydown = null
-    
-    defaultGame()
   }
 
-  // This statement blocks the PLAYER from passing beyond the edges of the canvas 
+  if ( keyState[40] || keyState[69] ) {
+    player.y += player.speed
+
+  }
+
   if ( player.y < 0 ) {
     return player.y = 0
 
@@ -128,8 +131,8 @@ const movePlayer = event => {
 
     return player.y = canvas.height - player.height
   }
-
 }
+
 
 const renderCPU = () => {
   // RENDER CPU with actual position
@@ -262,7 +265,6 @@ const ballCollision = () => {
       ball.velY = 4 + game.gravity
 
     }
-
   }
 }
 
@@ -284,7 +286,7 @@ const Win = () => {
   return false
 }
 
-const fps = 60
+const fps = 90
 const updateGame = () => {
   // This give to the game the all infos as Player, ball, and CPU position.
   renderPlayer()
@@ -308,8 +310,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if ( e.key === 'Enter' ) {
 
       window.onkeydown = null
-      window.onkeydown = movePlayer
+      window.addEventListener('keydown', function(e) {
+        keyState[e.keyCode || e.which] = true 
+      }, true)
+      
+      window.addEventListener('keyup', function(e) {
+        keyState[e.keyCode || e.which] = false
+      
+      }, true)
 
+      setInterval(movePlayer, 10)
       updateGame()
 
     }

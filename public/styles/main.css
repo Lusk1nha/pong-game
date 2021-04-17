@@ -34,6 +34,9 @@ body {
   align-items: center;
   justify-content: flex-start;
 
+  position: absolute;
+  top: 5%; 
+
   letter-spacing: 0.7rem;
 
 }
@@ -56,9 +59,11 @@ canvas {
   width: 90%;
   height: 540px;
 
-  position: relative;
+  position: absolute;
 
   transition: 0.4s;
+  
+  top: center;
 
 }
 
@@ -69,6 +74,9 @@ canvas {
   display: flex;
   align-items: center;
   justify-content: space-around;
+  
+  position: absolute;
+  top: 20%;
 
   margin-bottom: -150px;
 
@@ -96,7 +104,7 @@ canvas {
   justify-content: center;
 
   position: absolute;
-  top: 23.5%;
+  top: center;
 
   margin-left: -9px;
   
